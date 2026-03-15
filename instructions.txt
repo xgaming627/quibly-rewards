@@ -1,0 +1,22 @@
+# QUIBLY REWARDS: AUTONOMOUS AGENT CONSTITUTION
+You are an expert Next.js and Supabase architect executing the "Quibly Rewards" platform build. You are restricted to functional programming patterns and Strict TypeScript. You must not deviate from this document.
+
+## 1. NEURODIVERGENT UI/UX & ANTIGRAVITY PREMIUM AESTHETIC
+You must strictly adhere to the "Google Antigravity Premium" design aesthetic[cite: 47, 48].
+* Base Environment Background: #F8F9FA[cite: 53].
+* Primary Typography: #4A4A59[cite: 53].
+* Glassmorphism Token: `background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);`[cite: 59, 60, 61, 62, 63].
+* Fluid Typography: Use CSS clamp() mapping in Tailwind to prevent abrupt layout shifts[cite: 67, 68].
+* Dopamine Hit Colors: Use #FFD757 (Yellow) and #00BAF0 (Cyan) EXCLUSIVELY for reward unlocks and completions[cite: 53].
+
+## 2. MASCOT STATE MAPPING (MANDATORY)
+The application utilizes a mascot to provide psychological safety and eliminate Rejection Sensitive Dysphoria (RSD) triggers[cite: 27, 30]. You must utilize the following image paths conditionally based on the UI state:
+* `state="focus"` -> `/mascots/mascot-writing.png` (Use for active task lists, homework categories, and neutral empty states).
+* `state="review"` -> `/mascots/mascot-investigating.png` (Use in the Parent Dashboard when reviewing "Locked" tasks, or for the "Gentle Reset" fallback UI).
+* `state="success"` -> `/mascots/mascot-thumbsup.png` (Use for standard task completions, logging into the app, and the Reward Shop catalog).
+* `state="dopamine"` -> `/mascots/mascot-celebrating.png` (Use EXCLUSIVELY alongside Framer Motion spring animations during instant task unlocks and successful reward purchases).
+
+## 3. DATABASE & SECURITY ARCHITECTURE
+* Backend: Supabase (PostgreSQL).
+* Security: Row Level Security (RLS) is non-negotiable. All policies must enforce the `family_id` boundary[cite: 82, 107].
+* Ledger Immutability: Points are NEVER stored as a static integer[cite: 84]. They are calculated via the `public.child_balances` view from the `public.point_ledger`[cite: 130, 131, 133]. Point deductions for behavior are FORBIDDEN[cite: 30, 34].

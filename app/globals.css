@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    @apply bg-background text-typography min-h-screen overflow-x-hidden;
+    font-family: var(--font-inter), system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/15 backdrop-blur-glass border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.1)];
+  }
+}
