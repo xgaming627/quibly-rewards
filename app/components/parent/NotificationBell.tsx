@@ -50,18 +50,22 @@ export function NotificationBell() {
             .on(
                 'postgres_changes',
                 {
-                    event: 'INSERT',
+                    event: '*',
                     schema: 'public',
                     table: 'notifications'
-                    // RLS ensures the user only receives their own notifications
                 },
                 (payload) => {
-                    logger.info("Realtime notification received!", payload);
-                    const newNotification = payload.new as Notification;
-
-                    if (mounted) {
-                        setNotifications(prev => [newNotification, ...prev].slice(0, 10)); // Keep top 10
-                        setUnreadCount(prev => prev + 1);
+                    const eventType = payload.eventType;
+                    
+                    if (eventType === 'INSERT') {
+                        const newNotification = payload.new as Notification;
+                        if (mounted) {
+                            setNotifications(prev => [newNotification, ...prev].slice(0, 10));
+                            setUnreadCount(prev => prev + 1);
+                        }
+                    } else if (eventType === 'UPDATE' || eventType === 'DELETE') {
+                        // Re-fetch to ensure sync across devices
+                        fetchInitial();
                     }
                 }
             )

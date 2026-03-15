@@ -97,6 +97,11 @@ export function ChildProgressView({ parentId }: { parentId: string }) {
                 { event: '*', schema: 'public', table: 'notifications' },
                 () => fetchData()
             )
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'profiles' },
+                () => fetchData()
+            )
             .subscribe();
 
         return () => {

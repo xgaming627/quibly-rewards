@@ -165,6 +165,16 @@ export function ChildDashboardView() {
                 { event: '*', schema: 'public', table: 'notifications' },
                 () => fetchData({ skipMaterialize: true })
             )
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'profiles' },
+                () => fetchData({ skipMaterialize: true })
+            )
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'child_balances' },
+                () => fetchData({ skipMaterialize: true })
+            )
             .subscribe();
 
         return () => {

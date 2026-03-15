@@ -37,7 +37,21 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
             }
         };
         load();
-        return () => { mounted = false; };
+
+        // 🟢 REALTIME SUBSCRIPTION
+        const channel = supabase
+            .channel('shop_reward_updates')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'rewards' },
+                () => load()
+            )
+            .subscribe();
+
+        return () => { 
+            mounted = false; 
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const initiatePurchase = (reward: Reward) => {
