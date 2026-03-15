@@ -68,11 +68,15 @@ export function TaskCard({ task, onComplete, onRequestApproval }: TaskCardProps)
     return (
         <motion.div
             layout
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            whileHover={status === "ready" ? { scale: 1.03, y: -4 } : {}}
-            whileTap={status === "ready" ? { scale: 0.97 } : {}}
+            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: -10 }}
+            whileHover={status === "ready" ? { 
+                scale: 1.02, 
+                y: -2,
+                transition: { type: "spring", stiffness: 400, damping: 25 }
+            } : {}}
+            whileTap={status === "ready" ? { scale: 0.98 } : {}}
             onClick={handleClick}
             className={`
                 relative cursor-pointer select-none overflow-visible
@@ -227,15 +231,15 @@ export function TaskCard({ task, onComplete, onRequestApproval }: TaskCardProps)
                 <motion.div
                     className="absolute inset-0 rounded-3xl pointer-events-none"
                     style={{
-                        boxShadow: "0 0 30px rgba(255, 215, 87, 0.3)",
-                    }}
+                        boxShadow: "0 0 30px rgba(245, 158, 11, 0.3)",
+                    } as any}
                     animate={{
                         boxShadow: [
-                            "0 0 15px rgba(255, 215, 87, 0.2)",
-                            "0 0 30px rgba(255, 215, 87, 0.4)",
-                            "0 0 15px rgba(255, 215, 87, 0.2)",
+                            "0 0 15px rgba(245, 158, 11, 0.2)",
+                            "0 0 30px rgba(245, 158, 11, 0.4)",
+                            "0 0 15px rgba(245, 158, 11, 0.2)",
                         ],
-                    }}
+                    } as any}
                     transition={{ repeat: 2, duration: 1.2 }}
                 />
             )}

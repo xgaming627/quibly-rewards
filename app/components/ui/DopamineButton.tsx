@@ -35,7 +35,7 @@ export const DopamineButton = React.forwardRef<HTMLButtonElement, DopamineButton
 
         const baseColors = variant === "cyan"
             ? "bg-[#00BAF0] text-white shadow-[0_4px_20px_rgba(0,186,240,0.4)]"
-            : "bg-[#FFD757] text-[#4A4A59] shadow-[0_4px_20px_rgba(255,215,87,0.4)]";
+            : "bg-[#F59E0B] text-[#4A4A59] shadow-[0_4px_20px_rgba(245,158,11,0.4)]";
 
         const sizeClasses = {
             sm: "px-4 py-2 text-sm",
@@ -52,12 +52,15 @@ export const DopamineButton = React.forwardRef<HTMLButtonElement, DopamineButton
                     sizeClasses[size],
                     className
                 )}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ 
+                    scale: 1.05,
+                    boxShadow: variant === "yellow" ? "0 0 25px rgba(245, 158, 11, 0.5)" : "0 0 25px rgba(0, 186, 240, 0.5)"
+                } as any}
+                whileTap={{ scale: 0.92 }}
                 transition={{
                     type: "spring",
-                    stiffness: 400,
-                    damping: 10
+                    stiffness: 500,
+                    damping: 15
                 }}
                 {...props}
             >

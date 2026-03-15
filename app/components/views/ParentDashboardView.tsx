@@ -43,6 +43,19 @@ export function ParentDashboardView() {
             }
         };
         fetchChildren();
+
+        const channel = supabase
+            .channel('profile_updates')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'profiles' },
+                () => fetchChildren()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, [parentId]);
 
     const handleLogout = async () => {

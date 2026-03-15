@@ -23,9 +23,6 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
     const [purchaseState, setPurchaseState] = useState<"idle" | "loading" | "success">("idle");
     const [isCooldown, setIsCooldown] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
-    const [requestingId, setRequestingId] = useState<string | null>(null);
-    const [requestReason, setRequestReason] = useState("");
-    const [isSubmittingRequest, setIsSubmittingRequest] = useState(false);
     const [justPurchased, setJustPurchased] = useState<Reward | null>(null);
 
     const { profile } = useGlobal();
@@ -87,19 +84,6 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
         document.body.style.overflow = "auto";
     };
 
-    const handleRequestSubmit = async (rewardId: string) => {
-        if (!requestReason.trim() || isSubmittingRequest) return;
-        setIsSubmittingRequest(true);
-        try {
-            await requestReward(rewardId, childId, requestReason.trim());
-            setRequestingId(null);
-            setRequestReason("");
-        } catch (err) {
-            logger.error("Failed to request reward", err);
-        } finally {
-            setIsSubmittingRequest(false);
-        }
-    };
 
     if (isLoading) {
         return (
@@ -299,7 +283,20 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
             </AnimatePresence>
 
             {/* RESTORED MAIN SHOP GRID */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <motion.div 
+                variants={{
+                    hidden: { opacity: 0 },
+                    show: {
+                        opacity: 1,
+                        transition: {
+                            staggerChildren: 0.05
+                        }
+                    }
+                }}
+                initial="hidden"
+                animate="show"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
                 {rewards.map(reward => {
                     const canAfford = currentPoints >= reward.point_cost;
                     const deficit = reward.point_cost - currentPoints;
@@ -308,16 +305,19 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
                     return (
                         <motion.div
                             key={reward.id}
+                            variants={{
+                                hidden: { opacity: 0, y: 20 },
+                                show: { opacity: 1, y: 0 }
+                            }}
                             layout
-                            whileHover={canAfford && !isProcessing ? { scale: 1.05, y: -4 } : {}}
+                            whileHover={canAfford && !isProcessing ? { 
+                                scale: 1.03, 
+                                y: -4,
+                                transition: { type: "spring", stiffness: 400, damping: 25 }
+                            } : {}}
                             whileTap={canAfford && !isProcessing ? { scale: 0.95 } : {}}
                             onClick={() => canAfford && !isProcessing && initiatePurchase(reward)}
-                            className={`
-                                relative rounded-3xl overflow-hidden cursor-pointer transition-all duration-300
-                                ${canAfford ? 'bg-white/10 backdrop-blur-glass border border-white/20 shadow-xl' : 'bg-black/5 border border-black/10'}
-                                ${isProcessing ? 'opacity-80 scale-95' : ''}
-                            `}
-                        >
+                            >
                             {/* Grayscale filter for unaffordable items */}
                             {!canAfford && !isProcessing && (
                                 <div className="absolute inset-0 z-20 bg-background/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-6 text-center">
@@ -325,45 +325,6 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
                                     <p className="text-sm font-bold text-typography/80 uppercase tracking-widest mb-4">
                                         Need {deficit} more pts
                                     </p>
-
-                                    {requestingId === reward.id ? (
-                                        <div className="w-full space-y-2" onClick={(e) => e.stopPropagation()}>
-                                            <input
-                                                type="text"
-                                                placeholder="Why do you deserve this?..."
-                                                value={requestReason}
-                                                onChange={(e) => setRequestReason(e.target.value)}
-                                                className="w-full bg-white/10 text-typography px-4 py-2 rounded-xl text-xs placeholder:text-typography/40 border border-white/20 outline-none focus:border-dopamine-cyan/50"
-                                                autoFocus
-                                            />
-                                            <div className="flex gap-2">
-                                                <button
-                                                    onClick={() => setRequestingId(null)}
-                                                    className="flex-1 py-2 rounded-xl text-xs font-bold text-typography/60 hover:bg-white/5"
-                                                    disabled={isSubmittingRequest}
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    onClick={() => handleRequestSubmit(reward.id)}
-                                                    className="flex-1 py-2 rounded-xl text-xs font-bold bg-dopamine-cyan text-background hover:scale-105 transition-transform"
-                                                    disabled={isSubmittingRequest}
-                                                >
-                                                    {isSubmittingRequest ? "Sending..." : "Send Request"}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setRequestingId(reward.id);
-                                            }}
-                                            className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-xs font-bold text-typography transition-colors absolute bottom-4"
-                                        >
-                                            Request Anyway
-                                        </button>
-                                    )}
                                 </div>
                             )}
 
@@ -420,7 +381,7 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
                         </motion.div>
                     );
                 })}
-            </div>
+            </motion.div>
         </div>
     );
 }

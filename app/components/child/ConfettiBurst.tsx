@@ -20,7 +20,7 @@ interface ConfettiBurstProps {
  */
 export function ConfettiBurst({ isActive, onComplete }: ConfettiBurstProps) {
     const particles = React.useMemo(() => {
-        const colors = ["#FFD757", "#00BAF0", "#FFD757", "#00BAF0", "#A3F0AF", "#FFD757"];
+        const colors = ["#F59E0B", "#00BAF0", "#F59E0B", "#00BAF0", "#A3F0AF", "#F59E0B"];
         return Array.from({ length: 16 }, (_, i) => ({
             id: i,
             color: colors[i % colors.length],
@@ -48,7 +48,7 @@ export function ConfettiBurst({ isActive, onComplete }: ConfettiBurstProps) {
                                     width: p.size,
                                     height: p.size,
                                     backgroundColor: p.color,
-                                }}
+                                } as any}
                                 initial={{ x: 0, y: 0, scale: 0, opacity: 1 }}
                                 animate={{
                                     x,
@@ -70,8 +70,8 @@ export function ConfettiBurst({ isActive, onComplete }: ConfettiBurstProps) {
                     <motion.div
                         className="absolute w-20 h-20 rounded-full"
                         style={{
-                            background: "radial-gradient(circle, rgba(255,215,87,0.5) 0%, transparent 70%)",
-                        }}
+                            background: "radial-gradient(circle, rgba(244,158,11,0.5) 0%, transparent 70%)",
+                        } as any}
                         initial={{ scale: 0, opacity: 0.8 }}
                         animate={{ scale: [0, 2.5], opacity: [0.8, 0] }}
                         transition={{ duration: 0.6, ease: "easeOut" }}

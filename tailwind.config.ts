@@ -12,7 +12,7 @@ const config: Config = {
             colors: {
                 background: "#F8F9FA",
                 typography: "#4A4A59",
-                "dopamine-yellow": "#FFD757",
+                "dopamine-yellow": "#F59E0B",
                 "dopamine-cyan": "#00BAF0",
                 "gentle-green": "#A3F0AF",
             },

@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "../../lib/cn";
 
 export type MascotState = "focus" | "review" | "success" | "dopamine";
@@ -54,7 +55,17 @@ export function MascotAvatar({
     };
 
     return (
-        <div className={cn("relative w-32 h-32 transition-transform duration-500", className)}>
+        <motion.div 
+            className={cn("relative w-32 h-32 transition-transform duration-500", className)}
+            animate={{
+                y: [0, -6, 0],
+            }}
+            transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+            }}
+        >
             <Image
                 src={getMascotPath(state)}
                 alt={getAltText(state)}
@@ -62,6 +73,6 @@ export function MascotAvatar({
                 className="object-contain"
                 priority={priority}
             />
-        </div>
+        </motion.div>
     );
 }

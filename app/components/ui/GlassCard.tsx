@@ -28,9 +28,15 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
             <motion.div
                 ref={ref}
                 className={cn(
-                    "bg-white/15 backdrop-blur-glass border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-3xl p-6",
+                    "bg-white/15 backdrop-blur-glass border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-3xl p-6 transition-colors duration-300",
                     className
                 )}
+                whileHover={{ 
+                    y: -4, 
+                    borderColor: "rgba(255,255,255,0.5)",
+                    boxShadow: "0 12px 48px rgba(0,0,0,0.15)"
+                } as any}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 {...props}
             >
                 {children}

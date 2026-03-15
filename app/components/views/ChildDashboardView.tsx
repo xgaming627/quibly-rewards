@@ -325,11 +325,22 @@ export function ChildDashboardView() {
                                                                 <h3 className="text-[10px] font-black uppercase tracking-widest text-typography">{labels[time]}</h3>
                                                                 <div className="flex-1 h-[1px] bg-white/10" />
                                                             </div>
-                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                                <AnimatePresence>
+                                                            <motion.div 
+                                                                variants={{
+                                                                    hidden: { opacity: 0 },
+                                                                    show: {
+                                                                        opacity: 1,
+                                                                        transition: { staggerChildren: 0.05 }
+                                                                    }
+                                                                }}
+                                                                initial="hidden"
+                                                                animate="show"
+                                                                className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                                                            >
+                                                                <AnimatePresence mode="popLayout">
                                                                     {tasks.map((task: Task) => <TaskCard key={task.id} task={task} onComplete={handleComplete} onRequestApproval={handleRequestApproval} />)}
                                                                 </AnimatePresence>
-                                                            </div>
+                                                            </motion.div>
                                                         </div>
                                                     );
                                                 })}

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "../ui/GlassCard";
+import { supabase } from "../../lib/supabase/client";
 import { fetchPresets, togglePreset, createPreset, TaskPreset } from "../../lib/dal/presetMutations";
 import { logger } from "../../lib/logger";
 
@@ -43,7 +44,20 @@ export function PresetManager({ parentId }: PresetManagerProps) {
 
     useEffect(() => {
         loadPresets();
-    }, [loadPresets]);
+
+        const channel = supabase
+            .channel('preset_updates')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'task_presets', filter: `parent_id=eq.${parentId}` },
+                () => loadPresets()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [loadPresets, parentId]);
 
     const handleToggle = async (id: string, active: boolean) => {
         await togglePreset(id, active);
