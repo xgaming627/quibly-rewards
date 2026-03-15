@@ -5,6 +5,7 @@ import { GlassCard } from "../ui/GlassCard";
 import { DopamineButton } from "../ui/DopamineButton";
 import { supabase } from "../../lib/supabase/client";
 import { fetchAllParentRewards, deleteReward, updateReward, Reward } from "../../lib/dal/parentRewardMutations";
+import Image from "next/image";
 
 interface RewardManagementProps {
     parentId: string;
@@ -127,9 +128,9 @@ export function RewardManagement({ parentId }: RewardManagementProps) {
                                     <>
                                         <div className="flex items-center gap-3">
                                             {reward.image_url && (
-                                                <img 
-                                                    src={reward.image_url} 
-                                                    alt={reward.title} 
+                                                <img
+                                                    src={reward.image_url}
+                                                    alt={reward.title}
                                                     className="w-12 h-12 rounded-xl object-cover border border-white/10"
                                                 />
                                             )}

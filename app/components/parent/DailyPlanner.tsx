@@ -34,7 +34,7 @@ export function DailyPlanner({ parentId }: DailyPlannerProps) {
         } finally {
             setIsLoading(false);
         }
-    }, [parentId]);
+    }, []);
 
     useEffect(() => {
         fetchTasks();
@@ -51,7 +51,7 @@ export function DailyPlanner({ parentId }: DailyPlannerProps) {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [fetchTasks]);
+    }, []);
 
     const handleReorder = async (newOrder: Task[], timeOfDay: string) => {
         // Update local state first for snappiness
@@ -62,7 +62,7 @@ export function DailyPlanner({ parentId }: DailyPlannerProps) {
             }
             return t;
         });
-        
+
         // This is a bit tricky with Reorder.Group because it only manages the subset
         // We need to merge them back correctly
         const otherTasks = tasks.filter(t => t.time_of_day !== timeOfDay);
@@ -70,7 +70,7 @@ export function DailyPlanner({ parentId }: DailyPlannerProps) {
             if (a.time_of_day !== b.time_of_day) return 0; // Relative order doesn't matter across groups here
             return a.sort_order - b.sort_order;
         });
-        
+
         setTasks(finalTasks);
 
         // Update database
@@ -150,14 +150,14 @@ export function DailyPlanner({ parentId }: DailyPlannerProps) {
                 {renderSegment("afternoon", "🌤️", "Afternoon")}
                 {renderSegment("night", "🌙", "Night")}
             </div>
-            
+
             <GlassCard className="p-6 border-dopamine-cyan/20 bg-gradient-to-br from-dopamine-cyan/5 to-transparent">
                 <div className="flex items-start gap-4">
                     <span className="text-2xl">💡</span>
                     <div>
                         <h4 className="text-sm font-bold text-dopamine-cyan mb-1">Planning Pro-tip</h4>
                         <p className="text-xs text-typography/60 leading-relaxed">
-                            Drag and drop tasks to set the perfect flow for your child. 
+                            Drag and drop tasks to set the perfect flow for your child.
                             Tasks appear on their Quest Board in this exact order to help them build a predictable routine.
                         </p>
                     </div>

@@ -35,7 +35,7 @@ export function TaskList({ parentId }: TaskListProps) {
         } finally {
             setIsLoading(false);
         }
-    }, [parentId]);
+    }, []);
 
     useEffect(() => {
         fetchTasks();
@@ -52,7 +52,7 @@ export function TaskList({ parentId }: TaskListProps) {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [fetchTasks]);
+    }, []);
 
     const handleEdit = (task: Task) => {
         setEditingTask(task);
@@ -95,7 +95,7 @@ export function TaskList({ parentId }: TaskListProps) {
             <h3 className="text-[10px] font-black text-typography/50 uppercase tracking-[0.3em] mb-2 pl-1">
                 Active Quests
             </h3>
-            
+
             <div className="flex flex-col gap-3">
                 <AnimatePresence>
                     {tasks.map((task: Task) => (

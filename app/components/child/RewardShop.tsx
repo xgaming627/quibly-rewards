@@ -9,6 +9,7 @@ import { requestReward } from "../../lib/dal/childMutations";
 import { useGlobal } from "../../store/GlobalState";
 import { logger } from "../../lib/logger";
 import { ConfettiBurst } from "./ConfettiBurst";
+import { supabase } from "../../lib/supabase/client";
 
 interface RewardShopProps {
     childId: string;
@@ -48,8 +49,8 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
             )
             .subscribe();
 
-        return () => { 
-            mounted = false; 
+        return () => {
+            mounted = false;
             supabase.removeChannel(channel);
         };
     }, []);
@@ -81,7 +82,7 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
                 setTimeout(() => {
                     setJustPurchased(null);
                     setIsCooldown(false);
-                }, 4000); 
+                }, 4000);
             }, 2500);
 
         } catch (err: any) {
@@ -155,13 +156,13 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
                         className="fixed inset-0 z-[20000] flex items-center justify-center w-full h-screen overflow-hidden bg-slate-950/60 backdrop-blur-md"
                     >
                         {/* Animated Background Orbs */}
-                        <motion.div 
-                            animate={{ rotate: 360, scale: [1, 1.2, 1] }} 
+                        <motion.div
+                            animate={{ rotate: 360, scale: [1, 1.2, 1] }}
                             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                             className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-purple-600/30 rounded-full mix-blend-screen filter blur-[100px]"
                         />
-                        <motion.div 
-                            animate={{ rotate: -360, scale: [1, 1.5, 1] }} 
+                        <motion.div
+                            animate={{ rotate: -360, scale: [1, 1.5, 1] }}
                             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                             className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-blue-600/30 rounded-full mix-blend-screen filter blur-[100px]"
                         />
@@ -175,18 +176,18 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
                         >
                             {/* LEFT COLUMN: Summary */}
                             <div className="w-full md:w-[45%] lg:w-[40%] p-6 md:p-12 lg:p-16 flex flex-col border-b md:border-b-0 md:border-r border-white/10 bg-black/20">
-                                <button 
-                                    onClick={closeCheckout} 
+                                <button
+                                    onClick={closeCheckout}
                                     disabled={purchaseState === "loading"}
                                     className="flex items-center gap-2 text-white/50 hover:text-white transition-colors mb-12 self-start font-medium text-sm disabled:opacity-50"
                                 >
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
                                     Cancel Order
                                 </button>
 
                                 <div className="flex flex-col gap-6 mt-4">
                                     <p className="text-white/40 font-semibold text-sm uppercase tracking-wider">Quibly Store</p>
-                                    
+
                                     <div className="flex items-center gap-4">
                                         <div className="w-20 h-20 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center text-4xl relative overflow-hidden shrink-0 shadow-lg backdrop-blur-md">
                                             {selectedReward.image_url ? (
@@ -213,7 +214,7 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
 
                             {/* RIGHT COLUMN: Payment Interface */}
                             <div className="w-full md:w-[55%] lg:w-[60%] p-6 md:p-12 lg:p-24 flex flex-col justify-center relative bg-white/5">
-                                
+
                                 <h2 className="text-3xl font-bold text-white mb-8">Checkout</h2>
 
                                 <div className="space-y-6">
@@ -236,8 +237,8 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
 
                                     <div className="space-y-2">
                                         <label className="text-sm font-semibold text-white/70 block">Receipt Email</label>
-                                        <input 
-                                            type="email" 
+                                        <input
+                                            type="email"
                                             disabled
                                             value="felipe@quibly.rewards"
                                             className="w-full p-4 rounded-2xl border border-white/10 bg-black/20 text-white/80 text-sm font-medium outline-none backdrop-blur-md"
@@ -277,8 +278,8 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
                                                 Processing Secure Payment...
                                             </div>
                                         ) : purchaseState === "success" ? (
-                                            <motion.div 
-                                                initial={{ scale: 0.5, opacity: 0 }} 
+                                            <motion.div
+                                                initial={{ scale: 0.5, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 className="flex items-center gap-2"
                                             >
@@ -297,7 +298,7 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
             </AnimatePresence>
 
             {/* RESTORED MAIN SHOP GRID */}
-            <motion.div 
+            <motion.div
                 variants={{
                     hidden: { opacity: 0 },
                     show: {
@@ -325,14 +326,14 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
                             }}
                             layout
                             className="relative overflow-hidden" // Critical fix for overlay containment
-                            whileHover={canAfford && !isProcessing ? { 
-                                scale: 1.03, 
+                            whileHover={canAfford && !isProcessing ? {
+                                scale: 1.03,
                                 y: -4,
                                 transition: { type: "spring", stiffness: 400, damping: 25 }
                             } : {}}
                             whileTap={canAfford && !isProcessing ? { scale: 0.95 } : {}}
                             onClick={() => canAfford && !isProcessing && initiatePurchase(reward)}
-                            >
+                        >
                             <GlassCard className="h-full p-0 overflow-hidden border-white/10 group flex flex-col">
                                 {/* Grayscale filter for unaffordable items */}
                                 {!canAfford && !isProcessing && (
