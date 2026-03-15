@@ -310,6 +310,7 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
                                 show: { opacity: 1, y: 0 }
                             }}
                             layout
+                            className="relative overflow-hidden" // Critical fix for overlay containment
                             whileHover={canAfford && !isProcessing ? { 
                                 scale: 1.03, 
                                 y: -4,
@@ -318,66 +319,69 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
                             whileTap={canAfford && !isProcessing ? { scale: 0.95 } : {}}
                             onClick={() => canAfford && !isProcessing && initiatePurchase(reward)}
                             >
-                            {/* Grayscale filter for unaffordable items */}
-                            {!canAfford && !isProcessing && (
-                                <div className="absolute inset-0 z-20 bg-background/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-6 text-center">
-                                    <span className="text-3xl mb-2 grayscale">🔒</span>
-                                    <p className="text-sm font-bold text-typography/80 uppercase tracking-widest mb-4">
-                                        Need {deficit} more pts
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* Stock Badge */}
-                            <div className="absolute top-4 right-4 z-20">
-                                {reward.stock !== null ? (
-                                    <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-sm border ${reward.stock > 0 ? 'bg-white/90 text-slate-900 border-white' : 'bg-red-500 text-white border-red-600'}`}>
-                                        {reward.stock > 0 ? `${reward.stock} Left` : 'Sold Out'}
-                                    </span>
-                                ) : (
-                                    <span className="bg-dopamine-cyan/80 text-white px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter border border-dopamine-cyan shadow-sm">
-                                        Infinite
-                                    </span>
-                                )}
-                            </div>
-
-                            {/* Image Placeholder or Actual Image */}
-                            <div className={`h-32 w-full flex items-center justify-center text-4xl relative overflow-hidden ${!canAfford ? 'grayscale opacity-60' : ''}`}>
-                                {reward.image_url ? (
-                                    <Image
-                                        src={reward.image_url}
-                                        alt={reward.title}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-gradient-to-br from-dopamine-cyan/20 to-dopamine-yellow/20 flex items-center justify-center">
-                                        🎁
+                            <GlassCard className="h-full p-0 overflow-hidden border-white/10 group flex flex-col">
+                                {/* Grayscale filter for unaffordable items */}
+                                {!canAfford && !isProcessing && (
+                                    <div className="absolute inset-0 z-20 bg-slate-950/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-6 text-center">
+                                        <span className="text-3xl mb-2 grayscale">🔒</span>
+                                        <p className="text-sm font-bold text-white uppercase tracking-widest mb-1">
+                                            Need {deficit} more pts
+                                        </p>
+                                        <p className="text-[10px] text-white/50 font-medium">Keep completing tasks!</p>
                                     </div>
                                 )}
-                            </div>
 
-                            {/* Content */}
-                            <div className={`p-5 flex flex-col gap-2 relative z-10 bg-white/5 ${!canAfford ? 'grayscale opacity-60' : ''}`}>
-                                <h3 className="font-bold text-lg text-typography truncate">{reward.title}</h3>
-                                {reward.description && (
-                                    <p className="text-xs text-typography/70 line-clamp-2 min-h-[2rem]">
-                                        {reward.description}
-                                    </p>
-                                )}
-
-                                <div className="mt-4 flex items-center justify-between">
-                                    <span className="bg-dopamine-cyan/15 text-dopamine-cyan font-black px-4 py-2 rounded-xl text-sm border border-dopamine-cyan/20 shadow-sm">
-                                        {reward.point_cost} pts
-                                    </span>
-
-                                    {isCooldown && !isProcessing && (
-                                        <span className="text-[10px] uppercase font-bold text-typography/40 tracking-widest">
-                                            Cooling down...
+                                {/* Stock Badge */}
+                                <div className="absolute top-4 right-4 z-20">
+                                    {reward.stock !== null ? (
+                                        <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-sm border ${reward.stock > 0 ? 'bg-white/90 text-slate-900 border-white' : 'bg-red-500 text-white border-red-600'}`}>
+                                            {reward.stock > 0 ? `${reward.stock} Left` : 'Sold Out'}
+                                        </span>
+                                    ) : (
+                                        <span className="bg-dopamine-cyan/80 text-white px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter border border-dopamine-cyan shadow-sm">
+                                            Infinite
                                         </span>
                                     )}
                                 </div>
-                            </div>
+
+                                {/* Image Placeholder or Actual Image */}
+                                <div className={`h-32 w-full flex items-center justify-center text-4xl relative overflow-hidden ${!canAfford ? 'grayscale opacity-60' : ''}`}>
+                                    {reward.image_url ? (
+                                        <Image
+                                            src={reward.image_url}
+                                            alt={reward.title}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gradient-to-br from-dopamine-cyan/20 to-dopamine-yellow/20 flex items-center justify-center">
+                                            🎁
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Content */}
+                                <div className={`p-5 flex flex-col gap-2 relative z-10 flex-1 ${!canAfford ? 'grayscale opacity-40' : ''}`}>
+                                    <h3 className="font-bold text-lg text-typography truncate">{reward.title}</h3>
+                                    {reward.description && (
+                                        <p className="text-xs text-typography/70 line-clamp-2 min-h-[2rem]">
+                                            {reward.description}
+                                        </p>
+                                    )}
+
+                                    <div className="mt-auto pt-4 flex items-center justify-between">
+                                        <span className="bg-dopamine-cyan/15 text-dopamine-cyan font-black px-4 py-2 rounded-xl text-sm border border-dopamine-cyan/20 shadow-sm">
+                                            {reward.point_cost} pts
+                                        </span>
+
+                                        {isCooldown && !isProcessing && (
+                                            <span className="text-[10px] uppercase font-bold text-typography/40 tracking-widest">
+                                                Cooling down...
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            </GlassCard>
                         </motion.div>
                     );
                 })}
