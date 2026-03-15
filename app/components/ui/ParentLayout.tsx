@@ -99,7 +99,7 @@ export function ParentLayout({ children, activeTab, onTabChange }: { children: R
 
             {/* Main Content Area */}
             <main className="flex-1 ml-[260px] p-8 relative z-10 w-full">
-                <AnimatePresence mode="wait">
+                <AnimatePresence>
                     <motion.div
                         key={activeTab}
                         initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}

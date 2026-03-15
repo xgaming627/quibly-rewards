@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { GlassCard } from "../ui/GlassCard";
 import { DopamineButton } from "../ui/DopamineButton";
+import { supabase } from "../../lib/supabase/client";
 import { fetchAllParentRewards, deleteReward, updateReward, Reward } from "../../lib/dal/parentRewardMutations";
 
 interface RewardManagementProps {
@@ -25,6 +26,19 @@ export function RewardManagement({ parentId }: RewardManagementProps) {
 
     useEffect(() => {
         loadRewards();
+
+        const channel = supabase
+            .channel('parent_reward_updates')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'rewards' },
+                () => loadRewards()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, [parentId, loadRewards]);
 
     const handleDelete = async (id: string) => {

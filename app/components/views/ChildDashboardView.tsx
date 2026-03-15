@@ -157,6 +157,11 @@ export function ChildDashboardView() {
             )
             .on(
                 'postgres_changes',
+                { event: '*', schema: 'public', table: 'rewards' },
+                () => fetchData({ skipMaterialize: true })
+            )
+            .on(
+                'postgres_changes',
                 { event: '*', schema: 'public', table: 'notifications' },
                 () => fetchData({ skipMaterialize: true })
             )

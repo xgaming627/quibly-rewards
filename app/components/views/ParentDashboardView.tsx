@@ -63,7 +63,7 @@ export function ParentDashboardView() {
     return (
         <ParentLayout activeTab={activeTab} onTabChange={setActiveTab}>
             {activeTab === "dashboard" && (
-                <div className="w-full max-w-5xl mx-auto flex flex-col gap-8 pb-20 mt-12 z-0 relative">
+                <div key="dashboard-content" className="w-full max-w-5xl mx-auto flex flex-col gap-8 pb-20 mt-12 relative">
                     {/* Dashboard Header */}
                     <header className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-6 shadow-xl relative z-50">
                         <div className="flex items-center gap-4">

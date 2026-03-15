@@ -42,6 +42,19 @@ export function TaskApproval() {
 
     useEffect(() => {
         fetchRequests();
+
+        const channel = supabase
+            .channel('task_approval_updates')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'notifications' },
+                () => fetchRequests()
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const handleAction = async (requestId: string, action: "approve" | "reject", taskId: string, childId: string) => {
