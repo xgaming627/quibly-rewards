@@ -33,6 +33,7 @@ export async function fetchPresets(parentId: string): Promise<TaskPreset[]> {
     const { data, error } = await supabase
         .from("task_presets")
         .select("*")
+        .eq("parent_id", parentId)
         .order("created_at", { ascending: false });
 
     if (error) {
@@ -143,13 +144,15 @@ export async function materializePresetsForChild(childId: string, parentId?: str
 
         if (shouldCreate) {
             // Check if task already exists for this preset (within its persistence window)
+            // CRITICAL: We check for ANY task with this preset_id and due_date range
+            // regardless of whether it's unassigned or assigned to this specific child.
             const { data: existing, error: checkError } = await supabase
                 .from("tasks")
                 .select("id")
                 .eq("preset_id", preset.id)
-                .or(`assigned_to.eq.${childId},assigned_to.is.null`)
                 .gte("due_date", checkStart)
-                .lte("due_date", checkEnd);
+                .lte("due_date", checkEnd)
+                .limit(1);
 
             if (checkError) {
                 logger.error("Error checking for existing tasks", checkError);
@@ -157,9 +160,10 @@ export async function materializePresetsForChild(childId: string, parentId?: str
             }
 
             if (!existing || existing.length === 0) {
-                await supabase.from("tasks").insert({
+                logger.info("Materializing task from preset", { presetId: preset.id, childId });
+                const { error: insertError } = await supabase.from("tasks").insert({
                     created_by: finalParentId,
-                    assigned_to: null,
+                    assigned_to: null, // Default to unassigned for simplicity in shared environments
                     preset_id: preset.id,
                     title: preset.title,
                     description: preset.description,
@@ -173,6 +177,11 @@ export async function materializePresetsForChild(childId: string, parentId?: str
                     time_of_day: preset.time_of_day,
                     sort_order: preset.sort_order
                 });
+
+                if (insertError) {
+                    // This might happen if another process inserted it simultaneously (once we add the DB constraint)
+                    logger.warn("Potential race condition during task materialization", insertError);
+                }
             }
         }
     }

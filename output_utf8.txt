@@ -1,0 +1,139 @@
+﻿Testing materialization for child: 7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d parent: f676add2-8032-4d3b-9c19-eeb51b27d804
+Recent Tasks:
+[
+  {
+    "id": "53e1cfae-8333-4b8c-9cf4-43333562a114",
+    "title": "Make your bed",
+    "due_date": "2026-03-16T23:59:59+00:00",
+    "preset_id": "d445cd4a-a0b3-4aaa-a3c0-a7ee162b62f3",
+    "created_at": "2026-03-16T12:28:57.796504+00:00",
+    "is_active": true
+  },
+  {
+    "id": "e5a71a90-700a-4f48-9c3f-ceaa6cdc346e",
+    "title": "Make your bed",
+    "due_date": "2026-03-15T23:59:59+00:00",
+    "preset_id": "d445cd4a-a0b3-4aaa-a3c0-a7ee162b62f3",
+    "created_at": "2026-03-15T22:25:30.415811+00:00",
+    "is_active": true
+  },
+  {
+    "id": "033fa0f3-f767-4c5c-ac50-abf5890723f6",
+    "title": "Organize your stuff",
+    "due_date": null,
+    "preset_id": null,
+    "created_at": "2026-03-15T21:56:16.451217+00:00",
+    "is_active": true
+  },
+  {
+    "id": "0960d69a-4b14-4482-8005-5bc0d1cdebc8",
+    "title": "Improved behavior at home",
+    "due_date": null,
+    "preset_id": null,
+    "created_at": "2026-03-15T21:41:22.33423+00:00",
+    "is_active": true
+  },
+  {
+    "id": "5b87b578-7fa5-4679-b988-88f581413cdf",
+    "title": "Be on your best behavior at school - No bad choices.",
+    "due_date": null,
+    "preset_id": null,
+    "created_at": "2026-03-15T21:40:10.348908+00:00",
+    "is_active": true
+  },
+  {
+    "id": "68dabf79-2475-4fca-bf21-8e3417b6959e",
+    "title": "No Late Assignments",
+    "due_date": null,
+    "preset_id": null,
+    "created_at": "2026-03-15T21:37:15.050022+00:00",
+    "is_active": true
+  },
+  {
+    "id": "ad3703e1-b52c-4c6c-8c93-a104b553ab2b",
+    "title": "No missing assignments",
+    "due_date": null,
+    "preset_id": null,
+    "created_at": "2026-03-15T21:36:01.296529+00:00",
+    "is_active": true
+  },
+  {
+    "id": "717a8d6c-c873-419a-ba5e-d372e95e42aa",
+    "title": "Bonus for doing 4 Vocabs - Week of 03/23",
+    "due_date": null,
+    "preset_id": null,
+    "created_at": "2026-03-15T21:34:07.271709+00:00",
+    "is_active": true
+  },
+  {
+    "id": "8d938974-3fd1-422f-a0a9-ac4643e94e22",
+    "title": "5 reading Plus + 2 Vocabs- Week of 03/23",
+    "due_date": null,
+    "preset_id": null,
+    "created_at": "2026-03-15T21:31:59.782268+00:00",
+    "is_active": true
+  }
+]
+Recent Ledger Entries:
+[
+  {
+    "id": "1040a942-0825-444a-bffd-30e6f84f3d32",
+    "task_id": "e5a71a90-700a-4f48-9c3f-ceaa6cdc346e",
+    "created_at": "2026-03-16T12:30:00.131479+00:00",
+    "transaction_type": "task_completion"
+  },
+  {
+    "id": "172bab98-e065-4ffd-b7f1-a0d41f99350f",
+    "task_id": null,
+    "created_at": "2026-03-16T12:29:59.444488+00:00",
+    "transaction_type": "streak_break"
+  },
+  {
+    "id": "a22f01cf-d58a-4aab-8707-658d0b6aa34b",
+    "task_id": null,
+    "created_at": "2026-03-15T22:52:34.910868+00:00",
+    "transaction_type": "reward_purchase"
+  },
+  {
+    "id": "606abf99-6468-49a9-8fcb-cf4e6538a032",
+    "task_id": null,
+    "created_at": "2026-03-15T22:48:55.879984+00:00",
+    "transaction_type": "parent_adjustment"
+  },
+  {
+    "id": "b59dcbfa-2fc0-4882-be9d-41bb24094fe8",
+    "task_id": null,
+    "created_at": "2026-03-15T22:48:33.568443+00:00",
+    "transaction_type": "parent_adjustment"
+  },
+  {
+    "id": "42344749-e4ed-45f7-9f20-cdd4b829ae98",
+    "task_id": null,
+    "created_at": "2026-03-15T22:48:28.30622+00:00",
+    "transaction_type": "parent_adjustment"
+  },
+  {
+    "id": "4a0668e7-71c3-491e-8653-ae57d7fbac48",
+    "task_id": null,
+    "created_at": "2026-03-15T22:34:31.722336+00:00",
+    "transaction_type": "reward_request"
+  },
+  {
+    "id": "ec9176ad-5c14-4d86-84a9-15e0ed3e745a",
+    "task_id": null,
+    "created_at": "2026-03-15T22:29:08.347489+00:00",
+    "transaction_type": "reward_request"
+  },
+  {
+    "id": "c546f0a1-0110-41e2-8d4d-f5e8acdbfeb3",
+    "task_id": null,
+    "created_at": "2026-03-15T22:10:05.027716+00:00",
+    "transaction_type": "reward_purchase"
+  },
+  {
+    "id": "d343d249-e3a7-4e3f-a335-c3ccc5f48f9a",
+    "task_id": null,
+    "created_at": "2026-03-15T22:09:48.651833+00:00",
+    "transaction_type": "parent_adjustment"
+  }
+]

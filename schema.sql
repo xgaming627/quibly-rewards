@@ -83,6 +83,11 @@ create table public.tasks (
     updated_at  timestamptz not null default now()
 );
 
+-- Index to prevent duplicate materialization of the same preset on the same day
+create unique index if not exists idx_tasks_preset_due_unique 
+on public.tasks (preset_id, due_date) 
+where is_active = true and preset_id is not null;
+
 -- 7. Rewards (created_by is a loose UUID)
 create table public.rewards (
     id          uuid primary key default gen_random_uuid(),

@@ -101,16 +101,31 @@ export function ChildDashboardView() {
             const completedLedger = ledgerData || [];
 
             // 3. Filter tasks
-            const availableDaily = allTasks.filter(t => t.recurrence === "daily" && !completedLedger.some(l => l.task_id === t.id && new Date(l.created_at) >= todayStart)).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-            const availableWeekly = allTasks.filter(t => t.recurrence === "weekly" && !completedLedger.some(l => l.task_id === t.id && new Date(l.created_at) >= weekStart));
-            const availableAllTime = allTasks.filter(t => t.recurrence === "all_time" && !completedLedger.some(l => l.task_id === t.id));
+            const nowIso = new Date().toISOString();
+            
+            const availableDaily = allTasks.filter(t => 
+                t.recurrence === "daily" && 
+                (!t.due_date || t.due_date >= nowIso) &&
+                !completedLedger.some(l => l.task_id === t.id && new Date(l.created_at) >= todayStart)
+            ).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+
+            const availableWeekly = allTasks.filter(t => 
+                t.recurrence === "weekly" && 
+                (!t.due_date || t.due_date >= nowIso) &&
+                !completedLedger.some(l => l.task_id === t.id && new Date(l.created_at) >= weekStart)
+            );
+
+            const availableAllTime = allTasks.filter(t => 
+                t.recurrence === "all_time" && 
+                !completedLedger.some(l => l.task_id === t.id)
+            );
 
             setDailyTasks(availableDaily);
             setWeeklyTasks(availableWeekly);
             setAllTimeTasks(availableAllTime);
 
-            // 4. Missing Tasks
-            const nowIso = new Date().toISOString();
+            // 4. Missing Tasks (Only show if they were missed but still relevant to see, OR just log them)
+            // For now, keep as is but focus on active ones for the main board
             const missed = allTasks.filter(t =>
                 t.due_date &&
                 t.due_date < nowIso &&
