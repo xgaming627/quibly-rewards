@@ -31,10 +31,20 @@ export function ConfettiBurst({ isActive, onComplete }: ConfettiBurstProps) {
         }));
     }, []);
 
+    // Auto-dismiss after animation duration to prevent memory consumption
+    React.useEffect(() => {
+        if (isActive && onComplete) {
+            const timer = setTimeout(() => {
+                onComplete();
+            }, 1000); // Animation duration is approx 0.8s
+            return () => clearTimeout(timer);
+        }
+    }, [isActive, onComplete]);
+
     return (
-        <AnimatePresence onExitComplete={onComplete}>
+        <AnimatePresence>
             {isActive && (
-                <div className="absolute inset-0 pointer-events-none z-50 flex items-center justify-center overflow-visible">
+                <div className="absolute inset-0 pointer-events-none z-[100] flex items-center justify-center overflow-visible">
                     {particles.map((p) => {
                         const radians = (p.angle * Math.PI) / 180;
                         const x = Math.cos(radians) * p.distance;
@@ -56,7 +66,6 @@ export function ConfettiBurst({ isActive, onComplete }: ConfettiBurstProps) {
                                     scale: [0, 1.5, 0.8],
                                     opacity: [1, 1, 0],
                                 }}
-                                exit={{ opacity: 0 }}
                                 transition={{
                                     duration: 0.7,
                                     delay: p.delay,

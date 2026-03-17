@@ -58,9 +58,7 @@ export function ChildDashboardView() {
         try {
             await checkAdjustments();
 
-            // 0. Materialize presets for this child. 
-            // We only do this on full refresh or mount, NOT on every realtime update 
-            // to prevent the "feedback loop" of insertions triggering updates.
+            // 0. Materialize presets for this child (Debounced/Limited)
             if (!options?.skipMaterialize) {
                 const { data: adminData } = await supabase
                     .from("profiles")
@@ -74,29 +72,32 @@ export function ChildDashboardView() {
                 }
             }
 
-            // 1. Fetch all active tasks assigned to this child OR unassigned (for 2-person simplicity)
+            // 1. Fetch all active tasks assigned to this child OR unassigned
             const { data: taskData } = await supabase
                 .from("tasks")
                 .select("*")
                 .or(`assigned_to.eq.${childId},assigned_to.is.null`)
                 .eq("is_active", true)
                 .order("created_at", { ascending: false });
-            // ... existing code continues
 
             const allTasks = taskData || [];
 
-            // 2. Fetch ledger entries
+            // 2. Optimized Ledger Fetch: Only fetch recent completions (last 30 days) to save memory
             const todayStart = new Date();
             todayStart.setHours(0, 0, 0, 0);
 
             const weekStart = new Date(todayStart);
             weekStart.setDate(weekStart.getDate() - weekStart.getDay());
 
+            const historyFilter = new Date(todayStart);
+            historyFilter.setDate(historyFilter.getDate() - 30); // 30-day lookback for memory optimization
+
             const { data: ledgerData } = await supabase
                 .from("point_ledger")
                 .select("task_id, created_at, transaction_type")
                 .eq("child_id", childId)
-                .eq("transaction_type", "task_completion");
+                .eq("transaction_type", "task_completion")
+                .gte("created_at", historyFilter.toISOString()); // Optimized query
 
             const completedLedger = ledgerData || [];
 
@@ -124,8 +125,6 @@ export function ChildDashboardView() {
             setWeeklyTasks(availableWeekly);
             setAllTimeTasks(availableAllTime);
 
-            // 4. Missing Tasks (Only show if they were missed but still relevant to see, OR just log them)
-            // For now, keep as is but focus on active ones for the main board
             const missed = allTasks.filter(t =>
                 t.due_date &&
                 t.due_date < nowIso &&
@@ -133,7 +132,7 @@ export function ChildDashboardView() {
             );
             setMissingTasks(missed);
 
-            // 5. Fetch child balance
+            // 4. Fetch child balance
             const { data: balanceData } = await supabase
                 .from("child_balances")
                 .select("current_points")
@@ -142,7 +141,6 @@ export function ChildDashboardView() {
 
             setCurrentPoints(balanceData?.current_points || 0);
 
-            // Gentle Reset
             if (availableDaily.length > 0 && new Date().getHours() < 10) {
                 setShowReset(true);
             }
@@ -158,11 +156,12 @@ export function ChildDashboardView() {
 
         if (!childId) return;
 
+        // Consolidated Realtime Channel to reduce listener overhead
         const channel = supabase
-            .channel('child_dashboard_updates')
+            .channel(`child_dashboard_${childId}`)
             .on(
                 'postgres_changes',
-                { event: '*', schema: 'public', table: 'point_ledger' },
+                { event: '*', schema: 'public', table: 'point_ledger', filter: `child_id=eq.${childId}` },
                 () => fetchData({ skipMaterialize: true })
             )
             .on(
@@ -172,22 +171,12 @@ export function ChildDashboardView() {
             )
             .on(
                 'postgres_changes',
-                { event: '*', schema: 'public', table: 'rewards' },
+                { event: '*', schema: 'public', table: 'notifications', filter: `user_id=eq.${childId}` },
                 () => fetchData({ skipMaterialize: true })
             )
             .on(
                 'postgres_changes',
-                { event: '*', schema: 'public', table: 'notifications' },
-                () => fetchData({ skipMaterialize: true })
-            )
-            .on(
-                'postgres_changes',
-                { event: '*', schema: 'public', table: 'profiles' },
-                () => fetchData({ skipMaterialize: true })
-            )
-            .on(
-                'postgres_changes',
-                { event: '*', schema: 'public', table: 'child_balances' },
+                { event: '*', schema: 'public', table: 'child_balances', filter: `child_id=eq.${childId}` },
                 () => fetchData({ skipMaterialize: true })
             )
             .subscribe();

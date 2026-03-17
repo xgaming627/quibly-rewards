@@ -10,7 +10,7 @@ import { completeUnlockedTask } from "../../lib/dal/childMutations"; // using fo
 type Notification = Database["public"]["Tables"]["notifications"]["Row"];
 
 export function TaskApproval() {
-    const [requests, setRequests] = useState<{ notif: Notification, taskId: string, childId: string, reason: string, taskTitle: string }[]>([]);
+    const [requests, setRequests] = useState<{ notif: Notification, taskId: string, childId: string, reason: string, taskTitle: string, childName: string }[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchRequests = async () => {
@@ -32,7 +32,8 @@ export function TaskApproval() {
                     taskId: parts[1],
                     childId: parts[2],
                     reason: parts[3] || "No reason provided",
-                    taskTitle: parts[4] || "Unknown Task"
+                    taskTitle: parts[4] || "Unknown Task",
+                    childName: parts[5] || parts[2].slice(0, 4) // Fallback to ID slice
                 };
             });
             setRequests(parsed);
@@ -108,7 +109,7 @@ export function TaskApproval() {
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 max-w-full overflow-hidden">
             <h3 className="font-black text-typography text-lg mb-2">Needs Approval</h3>
             <AnimatePresence>
                 {requests.map((req) => (
@@ -117,22 +118,26 @@ export function TaskApproval() {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95, height: 0 }}
-                        className="bg-dopamine-cyan/10 border border-dopamine-cyan/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                        className="bg-dopamine-cyan/10 border border-dopamine-cyan/30 rounded-2xl p-4 flex flex-col gap-4 relative group"
                     >
-                        <div>
-                            <p className="text-typography text-sm font-bold truncate">Child #{req.childId.slice(0, 4)} completed a locked task</p>
-                            <p className="text-typography/70 text-sm mt-1">Reason: <span className="italic">&quot;{req.reason}&quot;</span></p>
+                        <div className="pr-4">
+                            <p className="text-typography text-sm font-bold">
+                                <span className="text-dopamine-cyan">{req.childName}</span> requested to complete <span className="text-dopamine-yellow">{req.taskTitle}</span>
+                            </p>
+                            <p className="text-typography/70 text-xs mt-2 bg-black/20 p-2 rounded-lg italic">
+                                &quot;{req.reason}&quot;
+                            </p>
                         </div>
-                        <div className="flex items-center gap-2 shrink-0">
+                        <div className="flex items-center gap-2 w-full">
                             <button
                                 onClick={() => handleAction(req.notif.id, "reject", req.taskId, req.childId)}
-                                className="px-4 py-2 rounded-xl text-sm font-bold bg-white/5 hover:bg-red-500/20 hover:text-red-500 text-typography/60 transition-colors"
+                                className="flex-1 px-4 py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-red-500/20 hover:text-red-500 text-typography/60 transition-colors border border-white/10"
                             >
                                 Reject
                             </button>
                             <button
                                 onClick={() => handleAction(req.notif.id, "approve", req.taskId, req.childId)}
-                                className="px-4 py-2 rounded-xl text-sm font-bold bg-dopamine-cyan text-background hover:scale-105 transition-transform"
+                                className="flex-1 px-4 py-2 rounded-xl text-xs font-bold bg-dopamine-cyan text-background hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-dopamine-cyan/20"
                             >
                                 Approve
                             </button>

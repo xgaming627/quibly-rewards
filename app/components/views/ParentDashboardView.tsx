@@ -44,8 +44,9 @@ export function ParentDashboardView() {
         };
         fetchChildren();
 
+        // Consolidated Real-time updates for parent view
         const channel = supabase
-            .channel('profile_updates')
+            .channel('parent_dashboard_updates')
             .on(
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'profiles' },

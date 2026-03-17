@@ -123,7 +123,10 @@ export function RewardShop({ childId, currentPoints, onPurchaseSuccess }: Reward
         <div className="w-full flex flex-col gap-6 relative">
             <ConfettiBurst
                 isActive={purchaseState === "success" || !!justPurchased}
-                onComplete={() => { }}
+                onComplete={() => {
+                    if (purchaseState === "success") setPurchaseState("idle");
+                    setJustPurchased(null);
+                }}
             />
 
             {/* Post-Purchase Confirmation Toast */}

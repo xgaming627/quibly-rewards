@@ -201,14 +201,23 @@ export async function requestLockedTaskApproval(
             throw new Error(taskError?.message || "Task not found");
         }
 
-        // 3. Insert structured parent notification (TASK_REQUEST|taskId|childId|Reason|TaskTitle)
+        // 3. Fetch child's name for better notifications
+        const { data: childProfile } = await supabase
+            .from("profiles")
+            .select("display_name")
+            .eq("id", childId)
+            .single();
+
+        const childName = childProfile?.display_name || "Someone";
+
+        // 4. Insert structured parent notification (TASK_REQUEST|taskId|childId|Reason|TaskTitle|childName)
         // Now targeting the parent specifically so their NotificationBell shows it!
         const { error: notifError } = await supabase
             .from("notifications")
             .insert({
                 user_id: taskData.created_by,
                 title: "Task Approval Request",
-                body: `TASK_REQUEST|${taskId}|${childId}|${reason}|${taskData.title}`
+                body: `TASK_REQUEST|${taskId}|${childId}|${reason}|${taskData.title}|${childName}`
             });
 
         if (notifError) {
